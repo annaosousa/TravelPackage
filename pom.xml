@@ -247,6 +247,20 @@
                   </configuration>
               </execution>
               <execution>
+                  <id>travel-agency-server</id>
+                  <goals>
+                      <goal>exec</goal>
+                  </goals>
+                  <configuration>
+                      <executable>java</executable>
+                      <arguments>
+                          <argument>-classpath</argument>
+                          <classpath />
+                          <argument>com.example.TravelAgencyServer</argument>
+                      </arguments>
+                  </configuration>
+              </execution>
+              <execution>
                   <id>travel-client</id>
                   <goals>
                       <goal>exec</goal>

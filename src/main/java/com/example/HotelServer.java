@@ -18,7 +18,7 @@ public class HotelServer {
 
     private void start() throws IOException {
         /* The port on which the server should run */
-        int port = 50052;
+        int port = 50064;
         server = Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create())
             .addService(new HotelImpl())
             .build()
@@ -70,7 +70,9 @@ public class HotelServer {
         public void bookHotel(HotelRequest req, StreamObserver<HotelResponse> responseObserver) {
           HotelResponse reply = HotelResponse.newBuilder()
           .setStatus("Status ")
-          .setHotelName("Hotel Name").build();
+          .setHotelName("Hotel Name")
+          .build();
+          
           responseObserver.onNext(reply);
           responseObserver.onCompleted();
         }

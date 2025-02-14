@@ -7,6 +7,8 @@ import io.grpc.Grpc;
 import io.grpc.ManagedChannel;
 import io.grpc.InsecureChannelCredentials;
 import io.grpc.StatusRuntimeException;
+
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -20,13 +22,58 @@ public class TravelAgencyClient {
     }
 
     public void trip () {
+
+        Scanner scanner = new Scanner(System.in);
+        
+        // Solicitando dados ao usuário
+        System.out.println("Informe o tipo de viagem (round-trip / one-way): ");
+        String type = scanner.nextLine();
+
+        System.out.println("Informe o ponto de origem: ");
+        String origin = scanner.nextLine();
+
+        System.out.println("Informe o ponto de destino: ");
+        String destination = scanner.nextLine();
+
+        System.out.println("Informe a data de partida (AAAA-MM-DD): ");
+        String departureDate = scanner.nextLine();
+
+        System.out.println("Informe a data de retorno (AAAA-MM-DD), ou deixe em branco para uma viagem de ida: ");
+        String returnDate = scanner.nextLine();
+        if (returnDate.isEmpty()) {
+            returnDate = "";  // Caso seja uma viagem de ida
+        }
+
+        System.out.println("Informe o número de pessoas: ");
+        int numPeople = Integer.parseInt(scanner.nextLine());
+
         logger.info("Registering your trip...");
+        // TripRequest request = TripRequest.newBuilder()
+        //     .setType("round-trip") // ou "one-way"
+        //     .setOrigin("São Paulo")
+        //     .setDestination("Rio de Janeiro")
+        //     .setDepartureDate("2025-03-15")
+        //     .setReturnDate("2025-03-20")
+        //     .setNumPeople(2)
+        //     .build();
         TripRequest request = TripRequest.newBuilder()
-        .build();
+            .setType(type) // ou "one-way"
+            .setOrigin(origin)
+            .setDestination(destination)
+            .setDepartureDate(departureDate)
+            .setReturnDate(returnDate)
+            .setNumPeople(numPeople)
+            .build();
+
         TripResponse response;
 
         try {
             response = travelAgencyStub.bookTrip(request);
+            logger.info("Trip registered successfully!");
+            logger.info("Status: " + response.getStatus());
+            logger.info("Flight Details: " + response.getFlightDetails());
+            logger.info("Hotel Details: " + response.getHotelDetails());
+            logger.info("Car Details: " + response.getCarDetails());
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "Agency Failed: {0}", e.getStatus());
             return;
@@ -34,39 +81,19 @@ public class TravelAgencyClient {
     }
     
     public static void main(String[] args) throws Exception {
-        String user = "world";
         // Access a service running on the local machine on port 50051
-        String target = "localhost:50052";
-        // Allow passing in the user and target strings as command line arguments
-        if (args.length > 0) {
-          if ("--help".equals(args[0])) {
-            System.err.println("Usage: [name [target]]");
-            System.err.println("");
-            System.err.println("  name    The name you wish to be greeted by. Defaults to " + user);
-            System.err.println("  target  The server to connect to. Defaults to " + target);
-            System.exit(1);
-          }
-          user = args[0];
-        }
+        String target = "localhost:50063";
+        
         if (args.length > 1) {
           target = args[1];
         }
     
-        // Create a communication channel to the server, known as a Channel. Channels are thread-safe
-        // and reusable. It is common to create channels at the beginning of your application and reuse
-        // them until the application shuts down.
-        //
-        // For the example we use plaintext insecure credentials to avoid needing TLS certificates. To
-        // use TLS, use TlsChannelCredentials instead.
         ManagedChannel channel = Grpc.newChannelBuilder(target, InsecureChannelCredentials.create())
             .build();
         try {
           TravelAgencyClient client = new TravelAgencyClient(channel);
           client.trip();
         } finally {
-          // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
-          // resources the channel should be shut down when it will no longer be used. If it may be used
-          // again leave it running.
           channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
         }
     }

@@ -18,7 +18,7 @@ public class AirlineServer {
 
     private void start() throws IOException {
         /* The port on which the server should run */
-        int port = 50052;
+        int port = 50060;
         server = Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create())
             .addService(new AirlineImpl())
             .build()
@@ -66,7 +66,7 @@ public class AirlineServer {
     public void bookFlight(FlightRequest request, StreamObserver<FlightResponse> responseObserver) {
       String flightNumber = "FL-" + (int) (Math.random() * 1000);
       FlightResponse response = FlightResponse.newBuilder()
-              .setStatus("Flight booked successfully")
+              .setStatus("Flight booked ")
               .setFlightNumber(flightNumber)
               .build();
               

@@ -26,13 +26,80 @@ service Greeter {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
 }
 
+service TravelAgency {
+  rpc BookTrip (TripRequest) returns (TripResponse);
+}
+
+service Airline {
+  rpc BookFlight (FlightRequest) returns (FlightResponse);
+}
+
+service Hotel {
+  rpc BookHotel (HotelRequest) returns (HotelResponse);
+}
+
+service CarRental {
+  rpc BookCar (CarRequest) returns (CarResponse);
+}
+
 // The request message containing the user's name.
 message HelloRequest {
   string name = 1;
+}
+
+message TripRequest {
+  string type = 1; // "one-way" ou "round-trip"
+  string origin = 2;
+  string destination = 3;
+  string departure_date = 4;
+  string return_date = 5;
+  int32 num_people = 6;
+}
+
+message FlightRequest {
+  string origin = 1;
+  string destination = 2;
+  string date = 3;
+  int32 num_people = 4;
+}
+
+message HotelRequest {
+  string destination = 1;
+  string check_in_date = 2;
+  string check_out_date = 3;
+  int32 num_people = 4;
+}
+
+message CarRequest {
+  string destination = 1;
+  string pick_up_date = 2;
+  string drop_off_date = 3;
 }
 
 // The response message containing the greetings
 message HelloReply {
   string message = 1;
   int32 replyNumber = 2;
+}
+
+message TripResponse {
+  string status = 1;
+  string flight_details = 2;
+  string hotel_details = 3;
+  string car_details = 4;
+}
+
+message FlightResponse {
+  string status = 1;
+  string flight_number = 2;
+}
+
+message HotelResponse {
+  string status = 1;
+  string hotel_name = 2;
+}
+
+message CarResponse {
+  string status = 1;
+  string car_model = 2;
 }

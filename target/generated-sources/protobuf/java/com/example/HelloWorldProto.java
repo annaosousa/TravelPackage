@@ -21,10 +21,50 @@ public final class HelloWorldProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_helloworld_HelloRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_helloworld_TripRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_helloworld_TripRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_helloworld_FlightRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_helloworld_FlightRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_helloworld_HotelRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_helloworld_HotelRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_helloworld_CarRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_helloworld_CarRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_helloworld_HelloReply_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_helloworld_HelloReply_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_helloworld_TripResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_helloworld_TripResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_helloworld_FlightResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_helloworld_FlightResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_helloworld_HotelResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_helloworld_HotelResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_helloworld_CarResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_helloworld_CarResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -35,11 +75,36 @@ public final class HelloWorldProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\020helloworld.proto\022\nhelloworld\"\034\n\014HelloR" +
-      "equest\022\014\n\004name\030\001 \001(\t\"2\n\nHelloReply\022\017\n\007me" +
-      "ssage\030\001 \001(\t\022\023\n\013replyNumber\030\002 \001(\0052I\n\007Gree" +
-      "ter\022>\n\010SayHello\022\030.helloworld.HelloReques" +
-      "t\032\026.helloworld.HelloReply\"\000B&\n\013com.examp" +
-      "leB\017HelloWorldProtoP\001\242\002\003HLWb\006proto3"
+      "equest\022\014\n\004name\030\001 \001(\t\"\201\001\n\013TripRequest\022\014\n\004" +
+      "type\030\001 \001(\t\022\016\n\006origin\030\002 \001(\t\022\023\n\013destinatio" +
+      "n\030\003 \001(\t\022\026\n\016departure_date\030\004 \001(\t\022\023\n\013retur" +
+      "n_date\030\005 \001(\t\022\022\n\nnum_people\030\006 \001(\005\"V\n\rFlig" +
+      "htRequest\022\016\n\006origin\030\001 \001(\t\022\023\n\013destination" +
+      "\030\002 \001(\t\022\014\n\004date\030\003 \001(\t\022\022\n\nnum_people\030\004 \001(\005" +
+      "\"f\n\014HotelRequest\022\023\n\013destination\030\001 \001(\t\022\025\n" +
+      "\rcheck_in_date\030\002 \001(\t\022\026\n\016check_out_date\030\003" +
+      " \001(\t\022\022\n\nnum_people\030\004 \001(\005\"N\n\nCarRequest\022\023" +
+      "\n\013destination\030\001 \001(\t\022\024\n\014pick_up_date\030\002 \001(" +
+      "\t\022\025\n\rdrop_off_date\030\003 \001(\t\"2\n\nHelloReply\022\017" +
+      "\n\007message\030\001 \001(\t\022\023\n\013replyNumber\030\002 \001(\005\"b\n\014" +
+      "TripResponse\022\016\n\006status\030\001 \001(\t\022\026\n\016flight_d" +
+      "etails\030\002 \001(\t\022\025\n\rhotel_details\030\003 \001(\t\022\023\n\013c" +
+      "ar_details\030\004 \001(\t\"7\n\016FlightResponse\022\016\n\006st" +
+      "atus\030\001 \001(\t\022\025\n\rflight_number\030\002 \001(\t\"3\n\rHot" +
+      "elResponse\022\016\n\006status\030\001 \001(\t\022\022\n\nhotel_name" +
+      "\030\002 \001(\t\"0\n\013CarResponse\022\016\n\006status\030\001 \001(\t\022\021\n" +
+      "\tcar_model\030\002 \001(\t2I\n\007Greeter\022>\n\010SayHello\022" +
+      "\030.helloworld.HelloRequest\032\026.helloworld.H" +
+      "elloReply\"\0002M\n\014TravelAgency\022=\n\010BookTrip\022" +
+      "\027.helloworld.TripRequest\032\030.helloworld.Tr" +
+      "ipResponse2N\n\007Airline\022C\n\nBookFlight\022\031.he" +
+      "lloworld.FlightRequest\032\032.helloworld.Flig" +
+      "htResponse2I\n\005Hotel\022@\n\tBookHotel\022\030.hello" +
+      "world.HotelRequest\032\031.helloworld.HotelRes" +
+      "ponse2G\n\tCarRental\022:\n\007BookCar\022\026.hellowor" +
+      "ld.CarRequest\032\027.helloworld.CarResponseB&" +
+      "\n\013com.exampleB\017HelloWorldProtoP\001\242\002\003HLWb\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -51,12 +116,60 @@ public final class HelloWorldProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_helloworld_HelloRequest_descriptor,
         new java.lang.String[] { "Name", });
-    internal_static_helloworld_HelloReply_descriptor =
+    internal_static_helloworld_TripRequest_descriptor =
       getDescriptor().getMessageTypes().get(1);
+    internal_static_helloworld_TripRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_helloworld_TripRequest_descriptor,
+        new java.lang.String[] { "Type", "Origin", "Destination", "DepartureDate", "ReturnDate", "NumPeople", });
+    internal_static_helloworld_FlightRequest_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_helloworld_FlightRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_helloworld_FlightRequest_descriptor,
+        new java.lang.String[] { "Origin", "Destination", "Date", "NumPeople", });
+    internal_static_helloworld_HotelRequest_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_helloworld_HotelRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_helloworld_HotelRequest_descriptor,
+        new java.lang.String[] { "Destination", "CheckInDate", "CheckOutDate", "NumPeople", });
+    internal_static_helloworld_CarRequest_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_helloworld_CarRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_helloworld_CarRequest_descriptor,
+        new java.lang.String[] { "Destination", "PickUpDate", "DropOffDate", });
+    internal_static_helloworld_HelloReply_descriptor =
+      getDescriptor().getMessageTypes().get(5);
     internal_static_helloworld_HelloReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_helloworld_HelloReply_descriptor,
         new java.lang.String[] { "Message", "ReplyNumber", });
+    internal_static_helloworld_TripResponse_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_helloworld_TripResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_helloworld_TripResponse_descriptor,
+        new java.lang.String[] { "Status", "FlightDetails", "HotelDetails", "CarDetails", });
+    internal_static_helloworld_FlightResponse_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_helloworld_FlightResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_helloworld_FlightResponse_descriptor,
+        new java.lang.String[] { "Status", "FlightNumber", });
+    internal_static_helloworld_HotelResponse_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_helloworld_HotelResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_helloworld_HotelResponse_descriptor,
+        new java.lang.String[] { "Status", "HotelName", });
+    internal_static_helloworld_CarResponse_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_helloworld_CarResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_helloworld_CarResponse_descriptor,
+        new java.lang.String[] { "Status", "CarModel", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

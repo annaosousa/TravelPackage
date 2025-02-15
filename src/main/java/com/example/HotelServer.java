@@ -18,7 +18,7 @@ public class HotelServer {
 
     private void start() throws IOException {
         /* The port on which the server should run */
-        int port = 50064;
+        int port = 50082;
         server = Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create())
             .addService(new HotelImpl())
             .build()
@@ -42,7 +42,8 @@ public class HotelServer {
     
     private void stop() throws InterruptedException {
         if (server != null) {
-        server.shutdown().awaitTermination(30, TimeUnit.SECONDS);
+            server.shutdownNow();
+            System.exit(0);
         }
     }
 
@@ -61,20 +62,55 @@ public class HotelServer {
     public static void main(String[] args) throws IOException, InterruptedException {
         final HotelServer server = new HotelServer();
         server.start();
+
+        // Captura SIGINT (Ctrl + C) e finaliza corretamente
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.err.println("*** Shutting down gRPC server due to JVM shutdown...");
+            try {
+                server.stop();
+            } catch (InterruptedException e) {
+                e.printStackTrace(System.err);
+            }
+            System.err.println("*** Server shut down.");
+        }));
+
         server.blockUntilShutdown();
     }
 
     static class HotelImpl extends HotelImplBase {
+        private String hotelName;
 
         @Override
         public void bookHotel(HotelRequest req, StreamObserver<HotelResponse> responseObserver) {
-          HotelResponse reply = HotelResponse.newBuilder()
-          .setStatus("Status ")
-          .setHotelName("Hotel Name")
-          .build();
+            hotelName = "Anna and Pedro hotel";
+
+            HotelResponse reply = HotelResponse.newBuilder()
+            .setStatus("Status ")
+            .setHotelName(hotelName)
+            .build();
           
-          responseObserver.onNext(reply);
-          responseObserver.onCompleted();
+            responseObserver.onNext(reply);
+            responseObserver.onCompleted();
+        }
+
+        @Override
+        public void cancelHotel(CancelHotelRequest request, StreamObserver<CancelHotelResponse> responseObserver) {
+            String bookedHotel = request.getHotelName();
+            StringBuilder statusMessage = new StringBuilder();
+            
+            if (bookedHotel.equals(hotelName)) {
+                hotelName = null; 
+                statusMessage.append("Hotel ").append(bookedHotel).append(" canceled successfully.");
+            } else {
+                statusMessage.append("Error: Hotel ").append(bookedHotel).append(" not found.");
+            }
+            
+            CancelHotelResponse response = CancelHotelResponse.newBuilder()
+                    .setStatus(statusMessage.toString())
+                    .build();
+            
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
         }
     }
 }

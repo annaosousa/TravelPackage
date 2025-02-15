@@ -32,14 +32,17 @@ service TravelAgency {
 
 service Airline {
   rpc BookFlight (FlightRequest) returns (FlightResponse);
+  rpc CancelFlight (CancelFlightRequest) returns (CancelFlightResponse);
 }
 
 service Hotel {
   rpc BookHotel (HotelRequest) returns (HotelResponse);
+  rpc CancelHotel (CancelHotelRequest) returns (CancelHotelResponse);
 }
 
 service CarRental {
   rpc BookCar (CarRequest) returns (CarResponse);
+  rpc CancelCar (CancelCarRequest) returns (CancelCarResponse);
 }
 
 // The request message containing the user's name.
@@ -63,6 +66,10 @@ message FlightRequest {
   int32 num_people = 4;
 }
 
+message CancelFlightRequest {
+  string flight_number = 1;
+}
+
 message HotelRequest {
   string destination = 1;
   string check_in_date = 2;
@@ -70,10 +77,18 @@ message HotelRequest {
   int32 num_people = 4;
 }
 
+message CancelHotelRequest {
+  string hotel_name = 1;
+}
+
 message CarRequest {
   string destination = 1;
   string pick_up_date = 2;
   string drop_off_date = 3;
+}
+
+message CancelCarRequest {
+  string car_model = 1;
 }
 
 // The response message containing the greetings
@@ -94,12 +109,24 @@ message FlightResponse {
   string flight_number = 2;
 }
 
+message CancelFlightResponse {
+  string status = 1;
+}
+
 message HotelResponse {
   string status = 1;
   string hotel_name = 2;
 }
 
+message CancelHotelResponse {
+  string status = 1;
+}
+
 message CarResponse {
   string status = 1;
   string car_model = 2;
+}
+
+message CancelCarResponse {
+  string status = 1;
 }

@@ -30,10 +30,16 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>33.3.1-jre</version> <!-- Ensure this version is compatible with all your dependencies -->
+      </dependency>
+      <dependency>
+        <groupId>jakarta.activation</groupId>
+        <artifactId>jakarta.activation-api</artifactId>
+        <version>2.1.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -123,7 +129,31 @@
       <version>4.4.0</version>
       <scope>test</scope>
     </dependency>
-  </dependencies>
+    <!-- Driver do MySQL -->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.33</version>
+        <scope>runtime</scope>
+    </dependency>
+
+    <!-- Hibernate -->
+    <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>6.3.1.Final</version>
+    </dependency>
+
+    <!-- Jakarta Persistence API (necessária para Hibernate 6.x) -->
+    <dependency>
+        <groupId>jakarta.persistence</groupId>
+        <artifactId>jakarta.persistence-api</artifactId>
+        <version>3.1.0</version>
+    </dependency>
+
+
+</dependencies>
+
 
   <build>
   <extensions>

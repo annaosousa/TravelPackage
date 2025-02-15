@@ -74,6 +74,7 @@ public class TravelAgencyClient {
             logger.info("Flight Details: " + response.getFlightDetails());
             logger.info("Hotel Details: " + response.getHotelDetails());
             logger.info("Car Details: " + response.getCarDetails());
+
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "Agency Failed: {0}", e.getStatus());
             return;
@@ -82,7 +83,7 @@ public class TravelAgencyClient {
     
     public static void main(String[] args) throws Exception {
         // Access a service running on the local machine on port 50051
-        String target = "localhost:50063";
+        String target = "localhost:50083";
         
         if (args.length > 1) {
           target = args[1];

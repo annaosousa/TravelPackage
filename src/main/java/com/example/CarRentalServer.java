@@ -18,7 +18,7 @@ public class CarRentalServer {
 
     private void start() throws IOException {
         /* The port on which the server should run */
-        int port = 50061;
+        int port = 50081;
         server = Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create())
             .addService(new CarRentalImpl())
             .build()
@@ -42,8 +42,10 @@ public class CarRentalServer {
     
     private void stop() throws InterruptedException {
         if (server != null) {
-        server.shutdown().awaitTermination(30, TimeUnit.SECONDS);
+            server.shutdownNow();
         }
+
+        System.exit(0);
     }
 
     /**
@@ -65,10 +67,12 @@ public class CarRentalServer {
     }
 
     static class CarRentalImpl extends CarRentalImplBase {
-    
+        String carModel;
+
         @Override
         public void bookCar(CarRequest request, StreamObserver<CarResponse> responseObs) {
-            String carModel = "Sedan 2024";
+            carModel = "Sedan 2024";
+
             CarResponse response = CarResponse.newBuilder()
                     .setStatus("Car rental confirmed")
                     .setCarModel(carModel)
@@ -76,6 +80,26 @@ public class CarRentalServer {
                     
             responseObs.onNext(response);
             responseObs.onCompleted();
+        }
+
+        @Override
+        public void cancelCar(CancelCarRequest request, StreamObserver<CancelCarResponse> responseObserver) {
+            String bookedCar = request.getCarModel();
+            StringBuilder statusMessage = new StringBuilder();
+            
+            if (bookedCar.equals(carModel)) {
+                carModel = null; 
+                statusMessage.append("Car ").append(bookedCar).append(" canceled successfully.");
+            } else {
+                statusMessage.append("Error: Car ").append(bookedCar).append(" not found.");
+            }
+            
+            CancelCarResponse response = CancelCarResponse.newBuilder()
+                    .setStatus(statusMessage.toString())
+                    .build();
+            
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
         }
     }
     

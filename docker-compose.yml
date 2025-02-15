@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  envoy:
+    build: .
+    ports:
+      - "9901:9901"  # Porta onde o Envoy escutará
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml  # Vincula o arquivo de configuração
+    networks:
+      - envoy_network
+
+networks:
+  envoy_network:
+    driver: bridge

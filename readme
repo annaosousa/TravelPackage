@@ -3,6 +3,7 @@ mvn exec:exec@car-rental-server
 mvn exec:exec@hotel-server
 mvn exec:exec@travel-agency-server
 mvn exec:exec@travel-client
+node .\app.js
 taskkill /PID 30912 /F
 taskkill /F /IM java.exe
 tasklist | findstr java

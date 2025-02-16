@@ -11,6 +11,14 @@ import io.grpc.stub.StreamObserver;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import com.example.DAO.AirlineDAO;
+import com.example.DAO.CarDAO;
+import com.example.DAO.HotelDAO;
+import com.example.DAO.TripDAO;
+import com.example.model.Airline;
+import com.example.model.Car;
+import com.example.model.Hotel;
+import com.example.model.Trip;
 import com.google.api.SystemParameter;
 
 public class TravelAgencyServer {
@@ -188,6 +196,8 @@ public class TravelAgencyServer {
     
                 // Se todas as etapas forem bem-sucedidas, responde com sucesso
                 if (flightSuccess && hotelSuccess && carSuccess) {
+                    trip.setStatus("success");
+
                     TripResponse response = TripResponse.newBuilder()
                             .setStatus("Booking Successful")
                             .setFlightDetails(flightResponse.getFlightNumber())
@@ -197,7 +207,7 @@ public class TravelAgencyServer {
                     responseObserver.onNext(response);
                     responseObserver.onCompleted();
 
-                    trip.setStatus("success");
+                    tripDAO.updateTripStatus(trip.getId(),"success");
                 }
     
             } catch (Exception e) {
@@ -216,21 +226,21 @@ public class TravelAgencyServer {
                     logger.warning("Cancelando carro: " + carReservationId);
                     carRentalStub.cancelCar(CancelCarRequest.newBuilder().setCarModel(carReservationId).build());
                     carDAO.deleteCar(trip.getId());
-                    trip.setStatus("cancel");
+                    tripDAO.updateTripStatus(trip.getId(), "cancel");
                 }
     
                 if (hotelSuccess) {
                     logger.warning("Cancelando hotel: " + hotelReservationId);
                     hotelStub.cancelHotel(CancelHotelRequest.newBuilder().setHotelName(hotelReservationId).build());
                     hotelDAO.deleteHotel(trip.getId());
-                    trip.setStatus("cancel");
+                    tripDAO.updateTripStatus(trip.getId(), "cancel");
                 }
     
                 if (flightSuccess) {
                     logger.warning("Cancelando voo: " + flightNumber);
                     airlineStub.cancelFlight(CancelFlightRequest.newBuilder().setFlightNumber(flightNumber).build());
                     airlineDAO.deleteAirline(trip.getId());
-                    trip.setStatus("cancel");
+                    tripDAO.updateTripStatus(trip.getId(), "cancel");
                 }
     
                 logger.warning("Rollback concluído.");

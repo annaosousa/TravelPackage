@@ -24,6 +24,7 @@ public class AirlineServer {
             .build()
             .start();
         logger.info("Airline Server started, listening on " + port);
+        
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             // Use stderr here since the logger may have been reset by its JVM shutdown hook.
             System.err.println("*** shutting down gRPC server since JVM is shutting down");
@@ -60,7 +61,7 @@ public class AirlineServer {
      */
     private void blockUntilShutdown() throws InterruptedException {
         if (server != null) {
-            server.awaitTermination();
+            server.awaitTermination(5,TimeUnit.HOURS);
         }
     }
 
@@ -69,16 +70,7 @@ public class AirlineServer {
         server.start();
         server.blockUntilShutdown();
 
-        // Intercepta Ctrl + C para desligar o servidor corretamente
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("*** shutting down gRPC server since JVM is shutting down");
-            try {
-                server.stop();
-            } catch (InterruptedException e) {
-                e.printStackTrace(System.err);
-            }
-            System.out.println("*** server shut down");
-        }));
+        
     }
 
     static class AirlineImpl extends AirlineImplBase {

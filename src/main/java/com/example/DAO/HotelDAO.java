@@ -11,7 +11,7 @@ public class HotelDAO {
         Transaction transaction = null;
         Session session = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+            session = HibernateUtil.getHotelsSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.save(hotel);
             transaction.commit();
@@ -31,7 +31,7 @@ public class HotelDAO {
         Transaction transaction = null;
         Session session = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+            session = HibernateUtil.getHotelsSessionFactory().openSession();
             transaction = session.beginTransaction();
 
             Hotel hotel = session.createQuery("FROM Hotel WHERE tripId = :tripId", Hotel.class)

@@ -11,7 +11,7 @@ public class CarDAO {
         Transaction transaction = null;
         Session session = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+            session = HibernateUtil.getCarsSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.save(car);
             transaction.commit();
@@ -31,7 +31,7 @@ public class CarDAO {
         Transaction transaction = null;
         Session session = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+            session = HibernateUtil.getCarsSessionFactory().openSession();
             transaction = session.beginTransaction();
 
             Car car = session.createQuery("FROM Car WHERE tripId = :tripId", Car.class)

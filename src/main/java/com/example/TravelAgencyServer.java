@@ -19,7 +19,6 @@ import com.example.model.Airline;
 import com.example.model.Car;
 import com.example.model.Hotel;
 import com.example.model.Trip;
-import com.google.api.SystemParameter;
 
 public class TravelAgencyServer {
     private static final Logger logger = Logger.getLogger(TravelAgencyServer.class.getName());

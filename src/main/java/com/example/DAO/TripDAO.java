@@ -3,7 +3,6 @@ package com.example.DAO;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import com.example.HibernateUtil;
-import com.example.model.Hotel;
 import com.example.model.Trip;
 
 public class TripDAO {
@@ -11,7 +10,7 @@ public class TripDAO {
         Transaction transaction = null;
         Session session = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+            session = HibernateUtil.getTripsSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.save(trip);
             transaction.commit();
@@ -31,7 +30,7 @@ public class TripDAO {
         Transaction transaction = null;
         Session session = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+            session = HibernateUtil.getTripsSessionFactory().openSession();
             transaction = session.beginTransaction();
 
             Trip trip = session.createQuery("FROM Trip WHERE id = :id", Trip.class)

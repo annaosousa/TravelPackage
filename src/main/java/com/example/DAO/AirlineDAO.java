@@ -11,7 +11,7 @@ public class AirlineDAO {
         Transaction transaction = null;
         Session session = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+            session = HibernateUtil.getFlightsSessionFactory().openSession();
             transaction = session.beginTransaction();
             session.save(airline);
             transaction.commit();
@@ -31,7 +31,7 @@ public class AirlineDAO {
         Transaction transaction = null;
         Session session = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+            session = HibernateUtil.getFlightsSessionFactory().openSession();
             transaction = session.beginTransaction();
 
             Airline airline = session.createQuery("FROM Airline WHERE tripId = :tripId", Airline.class)

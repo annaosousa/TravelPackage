@@ -1,15 +1,14 @@
 package com.example;
 
 import io.grpc.Grpc;
-import io.grpc.InsecureChannelCredentials;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Server;
-import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 import java.io.IOException;
 import java.util.logging.Logger;
+import java.util.Random;
 
 import com.example.DAO.AirlineDAO;
 import com.example.DAO.CarDAO;
@@ -100,14 +99,12 @@ public class TravelAgencyServer {
 
     class TravelAgencyImpl extends TravelAgencyGrpc.TravelAgencyImplBase {
         private TripDAO tripDAO = new TripDAO();
-        private AirlineDAO airlineDAO = new AirlineDAO();
-        private CarDAO carDAO = new CarDAO();
-        private HotelDAO hotelDAO = new HotelDAO();
-
+    
         Trip trip = new Trip();
 
         @Override
         public void bookTrip(TripRequest request, StreamObserver<TripResponse> responseObserver) {
+            Random random = new Random();
             
             trip.setType(request.getType());
             trip.setOrigin(request.getOrigin());
@@ -139,16 +136,11 @@ public class TravelAgencyServer {
                         .setDestination(request.getDestination())
                         .setDate(request.getDepartureDate())
                         .setNumPeople(request.getNumPeople())
+                        .setTripId(trip.getId())
                         .build();
                 FlightResponse flightResponse = airlineStub.bookFlight(flightRequest);
                 flightNumber = flightResponse.getFlightNumber();
-
-                Airline airline = new Airline();
-                airline.setFlightNumber("FL-100");
-                airline.setTripId(trip.getId());
-
-                airlineDAO.saveAirline(airline);
-
+                
                 logger.info("Passagem aérea reservada: " + flightNumber);
                 flightSuccess = true;
     
@@ -159,15 +151,10 @@ public class TravelAgencyServer {
                             .setCheckInDate(request.getDepartureDate())
                             .setCheckOutDate(request.getReturnDate())
                             .setNumPeople(request.getNumPeople())
+                            .setTripId(trip.getId())
                             .build();
                     HotelResponse hotelResponse = hotelStub.bookHotel(hotelRequest);
                     hotelReservationId = hotelResponse.getHotelName();
-
-                    Hotel hotel = new Hotel();
-                    hotel.setHotelName("Anna and Pedro hotel");
-                    hotel.setTripId(trip.getId());
-
-                    hotelDAO.saveHotel(hotel);
 
                     logger.info("Hotel reservado: " + hotelReservationId);
                     hotelSuccess = true;
@@ -179,15 +166,10 @@ public class TravelAgencyServer {
                             .setDestination(request.getDestination())
                             .setPickUpDate(request.getDepartureDate())
                             .setDropOffDate(request.getReturnDate())
+                            .setTripId(trip.getId())
                             .build();
                     CarResponse carResponse = carRentalStub.bookCar(carRequest);
-                    carReservationId = carResponse.getCarModel();
-
-                    Car car = new Car();
-                    car.setCarModel("Sedan 2024");
-                    car.setTripId(trip.getId());
-
-                    carDAO.saveCar(car);                    
+                    carReservationId = carResponse.getCarModel();                   
 
                     logger.info("Carro reservado: " + carReservationId);
                     carSuccess = true;
@@ -223,22 +205,19 @@ public class TravelAgencyServer {
                 // Compensação baseada nas falhas
                 if (carSuccess) {
                     logger.warning("Cancelando carro: " + carReservationId);
-                    carRentalStub.cancelCar(CancelCarRequest.newBuilder().setCarModel(carReservationId).build());
-                    carDAO.deleteCar(trip.getId());
+                    carRentalStub.cancelCar(CancelCarRequest.newBuilder().setTripId(trip.getId()).build());
                     tripDAO.updateTripStatus(trip.getId(), "cancel");
                 }
     
                 if (hotelSuccess) {
                     logger.warning("Cancelando hotel: " + hotelReservationId);
-                    hotelStub.cancelHotel(CancelHotelRequest.newBuilder().setHotelName(hotelReservationId).build());
-                    hotelDAO.deleteHotel(trip.getId());
+                    hotelStub.cancelHotel(CancelHotelRequest.newBuilder().setTripId(trip.getId()).build());
                     tripDAO.updateTripStatus(trip.getId(), "cancel");
                 }
     
                 if (flightSuccess) {
                     logger.warning("Cancelando voo: " + flightNumber);
-                    airlineStub.cancelFlight(CancelFlightRequest.newBuilder().setFlightNumber(flightNumber).build());
-                    airlineDAO.deleteAirline(trip.getId());
+                    airlineStub.cancelFlight(CancelFlightRequest.newBuilder().setTripId(trip.getId()).build());
                     tripDAO.updateTripStatus(trip.getId(), "cancel");
                 }
     

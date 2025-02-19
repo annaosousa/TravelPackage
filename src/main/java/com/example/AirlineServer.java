@@ -3,8 +3,11 @@ package com.example;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import java.util.Random;
 
 import com.example.AirlineGrpc.AirlineImplBase;
+import com.example.DAO.AirlineDAO;
+import com.example.model.Airline;
 
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
@@ -75,6 +78,9 @@ public class AirlineServer {
 
     static class AirlineImpl extends AirlineImplBase {
         String flightNumber;
+        String flightNumberString = "FL-100";
+
+        private AirlineDAO airlineDAO = new AirlineDAO();
 
         @Override
         public void bookFlight(FlightRequest request, StreamObserver<FlightResponse> responseObserver) {
@@ -85,30 +91,24 @@ public class AirlineServer {
                     .setFlightNumber(flightNumber)
                     .build();
                 
+            Airline airline = new Airline();
+                airline.setFlightNumber(flightNumberString);
+                airline.setTripId(request.getTripId());
+
+                airlineDAO.saveAirline(airline);
+
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         }
 
         @Override
         public void cancelFlight(CancelFlightRequest request, StreamObserver<CancelFlightResponse> responseObserver) {
-            // Obtém o número do voo a ser cancelado
-            String bookedFlight = request.getFlightNumber();
-            StringBuilder statusMessage = new StringBuilder();
             
-            // Verifica se o voo a ser cancelado é o mesmo reservado
-            if (bookedFlight.equals(flightNumber)) {
-                // Cancelar o voo (limpar a variável)
-                flightNumber = null; // Ou qualquer outra lógica de cancelamento
-                statusMessage.append("Flight ").append(bookedFlight).append(" canceled successfully. ");
-            } else {
-                // Se o voo não for encontrado
-                statusMessage.append("Error: Flight ").append(bookedFlight).append(" not found. ");
-            }
-            
-            // Criando a resposta
             CancelFlightResponse response = CancelFlightResponse.newBuilder()
-                    .setStatus(statusMessage.toString())
+                    .setStatus("cancel")
                     .build();
+            
+            airlineDAO.deleteAirline(request.getTripId());
             
             // Enviar a resposta para o cliente
             responseObserver.onNext(response);

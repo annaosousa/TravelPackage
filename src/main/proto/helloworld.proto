@@ -64,10 +64,12 @@ message FlightRequest {
   string destination = 2;
   string date = 3;
   int32 num_people = 4;
+  int32 trip_id = 5;
 }
 
 message CancelFlightRequest {
   string flight_number = 1;
+  int32 trip_id = 2;
 }
 
 message HotelRequest {
@@ -75,20 +77,24 @@ message HotelRequest {
   string check_in_date = 2;
   string check_out_date = 3;
   int32 num_people = 4;
+  int32 trip_id = 5;
 }
 
 message CancelHotelRequest {
   string hotel_name = 1;
+  int32 trip_id = 2;
 }
 
 message CarRequest {
   string destination = 1;
   string pick_up_date = 2;
   string drop_off_date = 3;
+  int32 trip_id = 5;
 }
 
 message CancelCarRequest {
   string car_model = 1;
+  int32 trip_id = 2;
 }
 
 // The response message containing the greetings
@@ -107,26 +113,32 @@ message TripResponse {
 message FlightResponse {
   string status = 1;
   string flight_number = 2;
+  int32 trip_id = 3;
 }
 
 message CancelFlightResponse {
   string status = 1;
+  int32 trip_id = 2;
 }
 
 message HotelResponse {
   string status = 1;
   string hotel_name = 2;
+  int32 trip_id = 3;
 }
 
 message CancelHotelResponse {
   string status = 1;
+  int32 trip_id = 2;
 }
 
 message CarResponse {
   string status = 1;
   string car_model = 2;
+  int32 trip_id = 3;
 }
 
 message CancelCarResponse {
   string status = 1;
+  int32 trip_id = 2;
 }

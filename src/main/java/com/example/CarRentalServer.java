@@ -5,6 +5,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import com.example.CarRentalGrpc.CarRentalImplBase;
+import com.example.DAO.CarDAO;
+import com.example.model.Car;
 
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
@@ -69,6 +71,8 @@ public class CarRentalServer {
     static class CarRentalImpl extends CarRentalImplBase {
         String carModel;
 
+        private CarDAO carDAO = new CarDAO();
+
         @Override
         public void bookCar(CarRequest request, StreamObserver<CarResponse> responseObs) {
             carModel = "Sedan 2024";
@@ -77,6 +81,12 @@ public class CarRentalServer {
                     .setStatus("Car rental confirmed")
                     .setCarModel(carModel)
                     .build();
+
+            Car car = new Car();
+            car.setCarModel("Sedan 2024");
+            car.setTripId(request.getTripId());
+
+            carDAO.saveCar(car); 
                     
             responseObs.onNext(response);
             responseObs.onCompleted();
@@ -84,19 +94,12 @@ public class CarRentalServer {
 
         @Override
         public void cancelCar(CancelCarRequest request, StreamObserver<CancelCarResponse> responseObserver) {
-            String bookedCar = request.getCarModel();
-            StringBuilder statusMessage = new StringBuilder();
-            
-            if (bookedCar.equals(carModel)) {
-                carModel = null; 
-                statusMessage.append("Car ").append(bookedCar).append(" canceled successfully.");
-            } else {
-                statusMessage.append("Error: Car ").append(bookedCar).append(" not found.");
-            }
-            
+
             CancelCarResponse response = CancelCarResponse.newBuilder()
-                    .setStatus(statusMessage.toString())
-                    .build();
+                .setStatus("cancel")
+                .build();
+
+            carDAO.deleteCar(request.getTripId());
             
             responseObserver.onNext(response);
             responseObserver.onCompleted();

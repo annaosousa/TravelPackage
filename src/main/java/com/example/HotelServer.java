@@ -5,6 +5,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import com.example.HotelGrpc.HotelImplBase;
+import com.example.DAO.HotelDAO;
+import com.example.model.Hotel;
 
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
@@ -80,6 +82,8 @@ public class HotelServer {
     static class HotelImpl extends HotelImplBase {
         private String hotelName;
 
+        private HotelDAO hotelDAO = new HotelDAO();
+
         @Override
         public void bookHotel(HotelRequest req, StreamObserver<HotelResponse> responseObserver) {
             hotelName = "Anna and Pedro hotel";
@@ -88,6 +92,12 @@ public class HotelServer {
             .setStatus("Status ")
             .setHotelName(hotelName)
             .build();
+
+            Hotel hotel = new Hotel();
+            hotel.setHotelName("Anna and Pedro hotel");
+            hotel.setTripId(req.getTripId());
+
+            hotelDAO.saveHotel(hotel);
           
             responseObserver.onNext(reply);
             responseObserver.onCompleted();
@@ -95,20 +105,12 @@ public class HotelServer {
 
         @Override
         public void cancelHotel(CancelHotelRequest request, StreamObserver<CancelHotelResponse> responseObserver) {
-            String bookedHotel = request.getHotelName();
-            StringBuilder statusMessage = new StringBuilder();
-            
-            if (bookedHotel.equals(hotelName)) {
-                hotelName = null; 
-                statusMessage.append("Hotel ").append(bookedHotel).append(" canceled successfully.");
-            } else {
-                statusMessage.append("Error: Hotel ").append(bookedHotel).append(" not found.");
-            }
-            
             CancelHotelResponse response = CancelHotelResponse.newBuilder()
-                    .setStatus(statusMessage.toString())
+                    .setStatus("cancel")
                     .build();
-            
+
+            hotelDAO.deleteHotel(request.getTripId());
+
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         }

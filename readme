@@ -1,9 +1,58 @@
-mvn exec:exec@airline-server
-mvn exec:exec@car-rental-server
-mvn exec:exec@hotel-server
-mvn exec:exec@travel-agency-server
-mvn exec:exec@travel-client
+Script para criação do banco local
+
+-- Banco para viagens
+CREATE DATABASE trips_db;
+USE trips_db;
+
+CREATE TABLE trips (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    type ENUM('round-trip', 'one-way') NOT NULL,
+    origin VARCHAR(255) NOT NULL,
+    destination VARCHAR(255) NOT NULL,
+    departure_date DATE NOT NULL,
+    return_date DATE NULL,
+    num_people INT NOT NULL,
+    status ENUM('pending', 'confirmed', 'cancelled') DEFAULT 'pending'
+);
+
+-- Banco para voos
+CREATE DATABASE flights_db;
+USE flights_db;
+
+CREATE TABLE flights (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    trip_id INT NOT NULL,
+    flight_number VARCHAR(50),
+    INDEX (trip_id)
+);
+
+-- Banco para hotéis
+CREATE DATABASE hotels_db;
+USE hotels_db;
+
+CREATE TABLE hotels (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    trip_id INT NOT NULL,
+    hotel_name VARCHAR(255),
+    INDEX (trip_id)
+);
+
+-- Banco para carros
+CREATE DATABASE cars_db;
+USE cars_db;
+
+CREATE TABLE cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    INDEX (trip_id)
+);
+
+
+Para executar o frontend:
+cd .\frontend\
 node .\app.js
-taskkill /PID 30912 /F
-taskkill /F /IM java.exe
-tasklist | findstr java
+
+Para executar as servers:
+java -jar .\airline.jar
+java -jar .\carRental.jar
+java -jar .\hotel.jar
+java -jar .\travelAgency.jar

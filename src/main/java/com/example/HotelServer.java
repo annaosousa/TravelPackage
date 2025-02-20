@@ -105,9 +105,7 @@ public class HotelServer {
 
         @Override
         public void cancelHotel(CancelHotelRequest request, StreamObserver<CancelHotelResponse> responseObserver) {
-            CancelHotelResponse response = CancelHotelResponse.newBuilder()
-                    .setStatus("cancel")
-                    .build();
+            CancelHotelResponse response = CancelHotelResponse.newBuilder().build();
 
             hotelDAO.deleteHotel(request.getTripId());
 

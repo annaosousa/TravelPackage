@@ -10,13 +10,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.Random;
 
-import com.example.DAO.AirlineDAO;
-import com.example.DAO.CarDAO;
-import com.example.DAO.HotelDAO;
 import com.example.DAO.TripDAO;
-import com.example.model.Airline;
-import com.example.model.Car;
-import com.example.model.Hotel;
 import com.example.model.Trip;
 
 public class TravelAgencyServer {
@@ -67,11 +61,11 @@ public class TravelAgencyServer {
 
     private void stop() {
         if (server != null) {
-            server.shutdown(); // Primeiro, faz o shutdown normal
+            server.shutdown(); 
             try {
                 if (!server.awaitTermination(60, java.util.concurrent.TimeUnit.SECONDS)) {
                     System.err.println("Forçando shutdown...");
-                    server.shutdownNow(); // Força o shutdown se não encerrar em 5s
+                    server.shutdownNow(); 
                     if ( !server.awaitTermination ( 60 , java.util.concurrent.TimeUnit.SECONDS ) ){
                         System.err.println ( "Executor service did not terminate. ");
                     }
@@ -194,12 +188,15 @@ public class TravelAgencyServer {
             } catch (Exception e) {
                 // Se falhar, inicia rollback
                 logger.warning("Booking failed, rolling back...");
-                rollback(flightSuccess, hotelSuccess, carSuccess, flightNumber, hotelReservationId, carReservationId);
+                boolean tripCancelled = false;
+                while(!tripCancelled) {
+                    tripCancelled = rollback(flightSuccess, hotelSuccess, carSuccess, flightNumber, hotelReservationId, carReservationId);
+                }
                 responseObserver.onError(e);
             }
         }
     
-        private void rollback(boolean flightSuccess, boolean hotelSuccess, boolean carSuccess,
+        private boolean rollback(boolean flightSuccess, boolean hotelSuccess, boolean carSuccess,
                               String flightNumber, String hotelReservationId, String carReservationId) {
             try {
                 // Compensação baseada nas falhas
@@ -207,23 +204,28 @@ public class TravelAgencyServer {
                     logger.warning("Cancelando carro: " + carReservationId);
                     carRentalStub.cancelCar(CancelCarRequest.newBuilder().setTripId(trip.getId()).build());
                     tripDAO.updateTripStatus(trip.getId(), "cancel");
+                    carSuccess = false;
                 }
     
                 if (hotelSuccess) {
                     logger.warning("Cancelando hotel: " + hotelReservationId);
                     hotelStub.cancelHotel(CancelHotelRequest.newBuilder().setTripId(trip.getId()).build());
                     tripDAO.updateTripStatus(trip.getId(), "cancel");
+                    hotelSuccess = false;
                 }
     
                 if (flightSuccess) {
                     logger.warning("Cancelando voo: " + flightNumber);
                     airlineStub.cancelFlight(CancelFlightRequest.newBuilder().setTripId(trip.getId()).build());
                     tripDAO.updateTripStatus(trip.getId(), "cancel");
+                    flightSuccess = false;
                 }
     
                 logger.warning("Rollback concluído.");
+                return true;
             } catch (Exception e) {
                 logger.warning("Erro ao realizar rollback: " + e.getMessage());
+                return false;
             }
         }
     }
